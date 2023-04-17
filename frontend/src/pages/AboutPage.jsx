@@ -14,7 +14,7 @@ export const AboutPage = () => {
                 <li>Django</li>
                 <li>Django Rest Framework</li>
                 <li>
-                    <Link to={'http://localhost:8000/swagger'} target='_blank'>endpoint link</Link>
+                    <Link to={'http://localhost:8000/swagger'} target='_blank'>endpoints link</Link>
                 </li>
 
             </ul>

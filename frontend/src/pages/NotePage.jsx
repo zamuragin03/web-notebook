@@ -20,7 +20,6 @@ export const NotePage = () => {
         navigate('/all')
     }
     let update_note = async () => {
-        console.log(JSON.stringify(note));
         fetch(`/api/update_note/${id}`, {
             method: 'PUT',
             headers: {

@@ -34,7 +34,6 @@ export const BirthdayPage = () => {
         setBirthday(event.target.value)
     }
     let update_item = async () => {
-        // console.log(JSON.stringify({ 'birthday': birthday, 'description': description }));
         fetch(`/api/update_birthday/${id}`, {
             method: 'PUT',
             headers: {
@@ -43,6 +42,7 @@ export const BirthdayPage = () => {
             body: JSON.stringify({ 'birthday': birthday, 'description': description })
         })
     }
+
     return (
         <div>
             <textarea className='change_text_area' defaultValue={description ?? ''} onChange={(event) => ChangeDescription(event)}></textarea>

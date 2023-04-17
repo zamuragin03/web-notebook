@@ -1,8 +1,9 @@
 import React, {  useState } from 'react'
-import { Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 
 export const AddPage = () => {
-    const [note, setNote] = useState('');
+    const [note, setNote] = useState(null);
+    const navigate = useNavigate();
 
     function ChangeNote(event) {
         setNote({ ...note, 'body': event.target.value })
@@ -15,12 +16,18 @@ export const AddPage = () => {
             },
             body: JSON.stringify(note)
         })
+        if (response.status===200){
+            navigate('/notes')
+        }
+
+        console.log(await response.json());
+        document.getElementsByName('note_body')[0].placeholder="shouldn't be empty";
         
     }
     return (
         <div>
-            <textarea className='change_text_area' placeholder='type your note here' onChange={(event) => ChangeNote(event)} ></textarea>
-            <Link className='add_note' onClick={Add_Note} to={'/all'}>
+            <textarea name='note_body' className='change_text_area' placeholder='type your note here' onChange={(event) => ChangeNote(event)} ></textarea>
+            <Link className='add_note' onClick={Add_Note} >
                 create
             </Link>
         </div>

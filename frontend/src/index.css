@@ -185,10 +185,16 @@ footer{
 }
 .add_note{
 
-    font-size:20px;
+    font-size:25px;
     text-align: center;
     width: 20%;
-    color: white;
+    color: white
+;
+}
+.add_note :hover{
+    color: aqua;
+    transition: color 500ms ease;
+
 }
 .add_from_list{
     color: rgb(201, 255, 119);
