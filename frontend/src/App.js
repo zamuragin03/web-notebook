@@ -1,14 +1,14 @@
 
-import NotesList from "./pages/NotesList"
 import React from "react";
 import { Routes, Route } from 'react-router-dom';
-import { NotePage } from "./pages/NotePage";
-import { AddPage } from "./pages/AddPage"
-import { AboutPage } from "./pages/AboutPage"
+import { NotePage } from "./pages/Notes/NotePage";
+import { AddPage } from './pages/Notes/AddPage'
+import { AboutPage } from "./pages/About/AboutPage"
 import { Page404 } from "./pages/Page404"
-import { BirthdayList } from "./pages/BirthdayList";
-import { BirthdayPage } from "./pages/BirthdayPage";
-import { AddBirthday } from "./pages/AddBirthday";
+import { BirthdayList } from "./pages/Birthdays/BirthdayList";
+import { BirthdayPage } from "./pages/Birthdays/BirthdayPage";
+import { AddBirthday } from "./pages/Birthdays/AddBirthday";
+import { NotesList } from "./pages/Notes/NotesList";
 
 function App() {
   return (

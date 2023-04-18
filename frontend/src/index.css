@@ -150,6 +150,8 @@ footer{
     background-color: black;
     color: white;
     font-size: 35px;
+    /* border: 1px solid white; */
+    min-height: 200px;
 }
 .change_text_area:hover{
     cursor:text;

@@ -1,0 +1,17 @@
+.myBtn{
+    padding: 5px 15px;
+    color: white;
+    font-size: 20px;
+    background: transparent;
+    border: 2px solid aqua;
+    display: block;
+    margin: 25px auto;
+}
+.myBtn:hover{
+    transition: color 500ms ease;
+    transition: border 500ms ease;
+    color: aqua;
+    border: 2px solid white;
+
+    cursor: pointer;
+}
