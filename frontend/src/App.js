@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Routes, Route } from 'react-router-dom';
 import { NotePage } from "./pages/Notes/NotePage";
@@ -21,7 +20,6 @@ function App() {
       <Route path="/about" Component={AboutPage} />
       <Route path="/birthdays" Component={BirthdayList} />
       <Route path='*' element={<Page404 />} />
-
     </Routes>
   );
 }

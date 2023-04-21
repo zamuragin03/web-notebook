@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import ListElement from '../../UI/ListElement/ListElement'
 
 export const AboutPage = () => {
     return (
@@ -10,13 +11,10 @@ export const AboutPage = () => {
             </p>
             <h3>List of techonologies that were used:</h3>
             <ul className='tech_list' >
-                <li>React</li>
-                <li>Django</li>
-                <li>Django Rest Framework</li>
-                <li>
-                    <Link to={'http://localhost:8000/swagger'} target='_blank'>endpoints link</Link>
-                </li>
-
+                <ListElement>React</ListElement>
+                <ListElement>Django REST Framework</ListElement>
+                <ListElement>React</ListElement>
+                <ListElement link={'http://localhost:8000/api/swagger'} target='_blank'>Endpoints link</ListElement>
             </ul>
         </div>
     )

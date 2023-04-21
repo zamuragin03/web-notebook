@@ -1,35 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { BirthdayItem } from '../../components/BirthdayItem';
+import { Link, useNavigate } from 'react-router-dom'
+import { BirthdayItem } from './BirthdayItem';
+import CreateButton from '../../UI/CreateButton/CreateButton';
+import BirthdayService from '../../API/birthdays/BirthdayService';
+import { useFetching } from '../../components/hooks/useFetchingNotes';
 
 export const BirthdayList = () => {
     const [birthdays, setBirthdays] = useState([
     ]);
-
+    const navigate = useNavigate();
+    const [fetchNotes, isLoading, error] = useFetching(async () =>{
+        let birthdays = await BirthdayService.get_all_birthdays()
+        setBirthdays(birthdays)
+    })
     useEffect(() => {
-        getBirthdays()
+        fetchNotes()
     }, []);
 
-    let getBirthdays = async () => {
-
-        let response = await fetch('api/get_birthdays')
-        let data = await response.json()
-        setBirthdays(data)
+    let create_birthday = () => {
+        navigate('/create_birthday')
     }
     return (
-
         <div className='birth_list' >
             <h2 className='NotesTitle' >Birthday List</h2>
-
-            <Link className='add_from_list' to={'/create_birthday'} >
+            <CreateButton className='add_from_list' onClick={create_birthday}>
                 create new birthday
-            </Link>
-            <div className='birthdayContainer'>
-                {birthdays.map(birthday => (
-                    <BirthdayItem className='bitem' key={birthday.id} birthday={birthday} />
-                ))}
-            </div>
+            </CreateButton>
+            {error &&
+            <h2>Ошибка {error}</h2>
+            }
+            {isLoading ? <h2>loading...</h2> :
 
+                <div className='birthdayContainer'>
+                    {birthdays.map(birthday => (
+                        <BirthdayItem className='bitem' key={birthday.id} birthday={birthday} />
+                    ))}
+                </div>
+            }
         </div>
     )
 }

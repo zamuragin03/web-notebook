@@ -26,7 +26,7 @@ header .logo{
     
 }
 header .logotype{
-    background: url(../static/images/logo.png) no-repeat;
+    background: url(./images/logo.png) no-repeat;
     background-size:contain;
     position: absolute;
     height: 50px;
@@ -41,7 +41,7 @@ header .logotype:hover{
 }
 header .presentation{
     margin: 50px 0;
-    background: url(../static/images/regnum_picture_15957813341518345_normal.jpg) no-repeat;
+    background: url(./images/regnum_picture_15957813341518345_normal.jpg) no-repeat;
     background-size: cover;
     background-position: center center;
     width: 100%;
@@ -225,13 +225,6 @@ footer{
     margin-top: 50px;
     list-style: none;
     font-size: 45px;
-}
-.tech_list :first-child{
-    color: rgb(169, 79, 79);
-}
-.tech_list :nth-child(2){
-    color: rgb(74, 74, 131);
-
 }
 .link_to_git{
     display: block;

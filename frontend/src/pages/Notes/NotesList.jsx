@@ -1,30 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import NoteItem from '../../components/NoteItem';
-import { Link } from 'react-router-dom'
+import NoteItem from './NoteItem';
+import { Link, useNavigate } from 'react-router-dom'
+import CreateButton from '../../UI/CreateButton/CreateButton';
+import NoteService from '../../API/notes/NoteService';
+import { useFetching } from '../../components/hooks/useFetchingNotes';
 
 export const NotesList = () => {
     const [notes, setNotes] = useState([
-    ]);
-
+    ]);;
     useEffect(() => {
-        getNotes()
+        fetchNotes()
     }, []);
-
-    let getNotes = async () => {
-
-        let response = await fetch('api/get_notes')
-        let data = await response.json()
-        setNotes(data)
+    const navigate = useNavigate();
+    const [fetchNotes, isLoading, error] = useFetching(async () =>{
+        let notes = await NoteService.get_all_notes()
+        setNotes(notes)
+    })
+    let CreateNote = () => {
+        navigate('/create_note')
     }
     return (
         <div className='note_list' >
             <h2 className='NotesTitle' >notes</h2>
-            <Link className='add_from_list' to={'/create_note'} >
-                add new note
-            </Link>
-            {notes.map(note => (
-                <NoteItem className='NoteItem' key={note.id} note={note} />
-            ))}
+            <CreateButton className='add_from_list' onClick={CreateNote}>
+                create new note
+            </CreateButton>
+            {error &&
+            <h2>Ошибка {error}</h2>
+            }
+            {isLoading ? <h1>loading...</h1> :
+                <div>
+                    {
+                        notes.map(note => (
+                            <NoteItem className='NoteItem' key={note.id} note={note} />
+                        ))
+                    }
+                </div>
+            }
         </div>
     )
 }

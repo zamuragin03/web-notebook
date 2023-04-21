@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import ListElement from '../UI/ListElement/ListElement';
+import DeleteButton from '../UI/DeleteButton/DeletteButton';
 
 export default function Header() {
     function change_color() {
@@ -16,28 +18,19 @@ export default function Header() {
                 <Link className='logotype' to={'/about'} />
                 <span className='logo'>Note web service</span>
                 <ul className='nav'>
-                    <li>
-                        <Link className='menu' to='/about' >About us</Link>
-                    </li>
-                    <li>
-                        <Link className='menu' to='/birthdays' >Check birthdays</Link>
-                    </li>
-                    <li>
-                        <Link className='menu' to='/create_note' >Create new note</Link>
-                    </li>
-                    <li>
-                        <Link className='menu' to='/notes' >Check my notes</Link>
-                    </li>
-                    <li>
-                        <Link className='menu' to='/create_birthday' >Create birthday </Link>
-                    </li>
+                    <ListElement link={'/about'} >About</ListElement>
+                    <ListElement link={'/birthdays'} >Check birthdays</ListElement>
+                    <ListElement link={'/notes'} >Check my notes</ListElement>
 
                 </ul>
-                <br />
-                <a onClick={change_color}> swith the light</a>
+            </div>
+            <DeleteButton onClick={change_color} >
+                switch the light
+            </DeleteButton>
+            <div className='presentation'>
 
             </div>
-            <div className='presentation'></div>
+
         </header>
     )
 }

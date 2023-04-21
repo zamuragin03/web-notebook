@@ -5,23 +5,15 @@ import CreateButton from '../../UI/CreateButton/CreateButton';
 
 
 export const AddBirthday = () => {
-    const [description, setDescription] = useState(null);
-    const [birthday, setBirthday] = useState(null);
+    const [birthday, setBirthday] = useState({ birthday: '', description: '' });
     const navigate = useNavigate();
-
-    function ChangeDescription(event) {
-        setDescription(event.target.value)
-    }
-    function ChangeBirthday(event) {
-        setBirthday(event.target.value)
-    }
     async function Add_Birthday() {
         let response = await fetch(`/api/create_birthday/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 'description': description, 'birthday': birthday })
+            body: JSON.stringify(birthday)
         })
         if (response.status === 200) {
             navigate('/birthdays')
@@ -32,8 +24,8 @@ export const AddBirthday = () => {
     }
     return (
         <div>
-            <textarea name='birthday_body' placeholder='type description here' className='change_text_area' defaultValue={description ?? ''} onChange={(event) => ChangeDescription(event)}></textarea>
-            <input type="date" defaultValue={birthday} onChange={(event) => ChangeBirthday(event)}></input>
+            <textarea name='birthday_body' placeholder='type description here' className='change_text_area' defaultValue={birthday.description ?? ''} onChange={e => setBirthday({ ...birthday, description: e.target.value })}></textarea>
+            <input type="date" defaultValue={birthday.birthday} onChange={e => setBirthday({ ...birthday, birthday: e.target.value })}></input>
             <CreateButton className='add_note' onClick={Add_Birthday} >create </CreateButton>
         </div>
     )
