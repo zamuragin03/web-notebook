@@ -1,3 +1,4 @@
+from colorfield.fields import ColorField
 from django.db import models
 
 # Create your models here.
@@ -12,12 +13,14 @@ class Note(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
+    category = models.ForeignKey(to="Category", on_delete=models.CASCADE, null=False)
 
     def __str__(self) -> str:
         return str(self.id)
 
+
 class Birthday(models.Model):
-    description =  models.TextField(
+    description = models.TextField(
         blank=True,
         null=True,
     )
@@ -26,11 +29,14 @@ class Birthday(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
+
     def __str__(self) -> str:
         return str(self.id)
 
+
 class Category(models.Model):
     name = models.CharField(max_length=20)
+    color = ColorField(format="hexa")
 
     def __str__(self) -> str:
         return self.name

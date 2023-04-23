@@ -61,6 +61,7 @@ class UpdateNote(APIView):
             instance = Note.objects.get(pk=pk)
         except:
             return Response()
+        # print(request.data)
         serializer = NoteSerializer(data=request.data, instance=instance)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -147,3 +148,26 @@ class CreateBirthday(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class GetCats(APIView):
+    serializer_class = CatSerializer
+    queryset = Category.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        cats = Category.objects.all()
+        return Response(CatSerializer(cats, many=True).data)
+
+
+class GetCat(APIView):
+    serializer_class = CatSerializer
+    queryset = Category.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        try:
+            cat = Category.objects.get(pk=pk)
+        except:
+            return Response({"error": "instance not found"})
+        return Response(CatSerializer(cat).data)
+
