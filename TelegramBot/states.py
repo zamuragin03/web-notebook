@@ -12,4 +12,6 @@ class FSMUser(StatesGroup):
     typing_cat = State()
 
     typing_username = State()
+    typing_reg_username = State()
+    typing_reg_password = State()
     typing_password = State()

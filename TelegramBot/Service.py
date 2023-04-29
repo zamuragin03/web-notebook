@@ -4,21 +4,18 @@ from DTO.CategoryDTO import CategoryDTO
 from DTO.UserDTO import UserDTO
 from aiogram.utils.markdown import *
 import jwt
+
 SECRET_KEY = "django-insecure-tet*&pf*pj97xtryjv_d^gwn-4t2bu*piu_b@k-pqszp_bdikn"
-ALGORITHM ='HS256'
+ALGORITHM = "HS256"
+
 
 class NoteService:
     def get_all_notes(tokens):
         notes = NoteAPI.get_all_notes(tokens=tokens)
         if notes.status_code == 401:
             return "Пожалуйста авторизуйтесь"
-        print('pizda1')
         cats = NoteAPI.get_cats()
-        print('pizda2')
-
-        print(notes)
         notes = notes.json()
-        print(notes)
         s = ""
         for note in notes:
             cat = NoteService.__get_concrete_cat_by_id(cats=cats, id=note["category"])
@@ -32,6 +29,8 @@ class NoteService:
                 + ")"
                 + "\n"
             )
+        if s=="":
+            return 'У вас нет заметок'
         return s
 
     def __get_concrete_cat(category_name):
@@ -48,12 +47,12 @@ class NoteService:
     def create_note(tokens, body, category_name):
         cat = NoteService.__get_concrete_cat(category_name=category_name)
         category = CategoryDTO(**cat)
-        encoded_data = jwt.decode(tokens['access'], SECRET_KEY,algorithms= ALGORITHM)
-        user_id = encoded_data['user_id']
+        encoded_data = jwt.decode(tokens["access"], SECRET_KEY, algorithms=ALGORITHM)
+        user_id = encoded_data["user_id"]
         note = NoteDTO(category=category, body=body, user=user_id)
-        return NoteAPI.create_new_note(noteDTO=note)
+        return NoteAPI.create_new_note(tokens=tokens, noteDTO=note)
 
-    def update_note(index, **kwargs):
+    def update_note(tokens, index, **kwargs):
         body = kwargs.get("body", None)
         category = kwargs.get("category", None)
         data = {}
@@ -63,7 +62,7 @@ class NoteService:
             data["category"] = NoteService.__get_concrete_cat(category_name=category)[
                 "id"
             ]
-        return NoteAPI.update_note(index=index, data=data)
+        return NoteAPI.update_note(tokens=tokens, index=index, data=data)
 
     def get_cat_names():
         cats = NoteAPI.get_cats()
@@ -80,3 +79,18 @@ class NoteService:
         if not access:
             return "Неверный логин или пароль"
         return {"access": access, "refresh": refresh, "msg": "Успешно авторизован"}
+
+    def isNoteOwner(tokens, id):
+        response = NoteAPI.get_note(tokens=tokens,id=id).json()
+        note = response.get("body", False)
+        print(note)
+        if not note:
+            return False
+        return True
+
+
+    def registerUser(username, password):
+        user = UserDTO(username=username, password=password)
+        response = NoteAPI.register_user(user=user)
+        if response.status_code==201:
+            return True
