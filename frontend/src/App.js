@@ -8,19 +8,22 @@ import { BirthdayList } from "./pages/Birthdays/BirthdayList";
 import { BirthdayPage } from "./pages/Birthdays/BirthdayPage";
 import { AddBirthday } from "./pages/Birthdays/AddBirthday";
 import { NotesList } from "./pages/Notes/NotesList";
+import Add_Cat from "./pages/Cats/Add_Cat";
+
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/notes" Component={NotesList} />
-      <Route path="/note/:id" Component={NotePage} />
-      <Route path="/birthday/:id" Component={BirthdayPage} />
-      <Route path="/create_note" Component={AddPage} />
-      <Route path="/create_birthday" Component={AddBirthday} />
-      <Route path="/about" Component={AboutPage} />
-      <Route path="/birthdays" Component={BirthdayList} />
-      <Route path='*' element={<Page404 />} />
-    </Routes>
+  return ( 
+      <Routes>
+        <Route path="/notes" Component={NotesList} />
+        <Route path="/note/:id" Component={NotePage} />
+        <Route path="/birthday/:id" Component={BirthdayPage} />
+        <Route path="/create_note" Component={AddPage} />
+        <Route path="/create_birthday" Component={AddBirthday} />
+        <Route path="/about" Component={AboutPage} />
+        <Route path="/birthdays" Component={BirthdayList} />
+        <Route path="/create_category" Component={Add_Cat} />
+        <Route path='*' element={<Page404 />} />
+      </Routes>
   );
 }
 

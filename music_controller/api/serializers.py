@@ -1,46 +1,50 @@
 from rest_framework import serializers
 from .models import *
+from django.contrib.auth.models import User
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id','username')
 
-class CatSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
+class CatSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True,)
     name = serializers.CharField()
     color = serializers.CharField()
 
-
-class NoteSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    body = serializers.CharField()
-    category = CatSerializer(required=False)
-    updated_at = serializers.DateTimeField(read_only=True)
-    created_at = serializers.DateTimeField(read_only=True)
-
-    def create(self, validated_data):
-        return Note.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.body = validated_data.get("body", instance.body)
-        print(validated_data.get('category_id', instance.category_id))
-        instance.category_id = validated_data.get('category_id', instance.category_id)
-        instance.updated_at = validated_data.get("updated_at", instance.updated_at)
-        instance.save()
-        return instance
+    class Meta:
+        model = Category
+        fields = ('__all__')
 
 
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = '__all__'
 
-class BirthdaySerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    description = serializers.CharField()
-    birthday = serializers.DateField()
-    updated_at = serializers.DateTimeField(read_only=True)
-    created_at = serializers.DateTimeField(read_only=True)
+class BirthdaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Birthday
+        fields = "__all__"
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "password",)
+        extra_kwargs = {
+            "password": {"write_only": True},
+        }
 
     def create(self, validated_data):
-        return Birthday.objects.create(**validated_data)
+        user = User.objects.create_user(
+            validated_data["username"],
+            password=validated_data["password"],
+        )
+        return user
 
-    def update(self, instance, validated_data):
-        instance.description = validated_data.get("description", instance.description)
-        instance.birthday = validated_data.get("birthday", instance.birthday)
-        instance.updated_at = validated_data.get("updated_at", instance.updated_at)
-        instance.save()
-        return instance
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"

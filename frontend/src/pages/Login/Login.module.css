@@ -1,0 +1,47 @@
+.Login{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: none;
+    background: rgb(0,0,0,0.8);
+    color: black;
+    z-index: 10;
+}
+.LoginContent{
+    padding: 25px;
+    background: black;
+    border-bottom: 5px solid white;
+    border-top: 5px solid white;
+    border-radius: 15px;
+    min-width: 250px;
+}
+.Login.active{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.choose_type{
+    display: flex;
+    justify-content: center;
+
+}
+.deactivate{
+    visibility: hidden;
+}
+.switcher{
+    /* display:block; */
+    margin:   20px 250px;
+    
+    justify-content: center;
+}
+.error_field{
+    color: white;
+text-shadow: red 4px 4px 2px;
+    display: block;
+    text-align: center;
+    font-size: 25px;
+    height: 50px;
+}

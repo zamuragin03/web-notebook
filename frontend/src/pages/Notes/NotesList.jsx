@@ -1,20 +1,33 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import NoteItem from './NoteItem';
 import { Link, useNavigate } from 'react-router-dom'
 import CreateButton from '../../UI/CreateButton/CreateButton';
-import NoteService from '../../API/notes/NoteService';
 import { useFetching } from '../../components/hooks/useFetchingNotes';
+import AuthContext from '../../components/Context/AuthContext';
+import GetAllNotes from '../../API/notes/NoteService';
 
 export const NotesList = () => {
-    const [notes, setNotes] = useState([
-    ]);;
+    const { user, authTokens } = useContext(AuthContext)
+
+    const [notes, setNotes] = useState([])
     useEffect(() => {
         fetchNotes()
-    }, []);
+    }, [user]);
     const navigate = useNavigate();
-    const [fetchNotes, isLoading, error] = useFetching(async () =>{
-        let notes = await NoteService.get_all_notes()
-        setNotes(notes)
+    const [fetchNotes, isLoading, error] = useFetching(async () => {
+        if (!user) {
+            return
+        }
+        let response = await fetch('api/get_notes', {
+            headers: {
+                'Authorization': `Bearer ${authTokens.access}`
+            }
+        })
+        const notes = await response.json()
+        let sorted_note = notes.sort(function (b, a) {
+            return new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
+        });
+        setNotes(sorted_note)
     })
     let CreateNote = () => {
         navigate('/create_note')
@@ -22,11 +35,16 @@ export const NotesList = () => {
     return (
         <div className='note_list' >
             <h2 className='NotesTitle' >notes</h2>
-            <CreateButton className='add_from_list' onClick={CreateNote}>
-                create new note
-            </CreateButton>
+
             {error &&
-            <h2>Ошибка {error}</h2>
+                <h2>Ошибка {error}</h2>
+            }
+            {user ?
+                <CreateButton className='add_from_list' onClick={CreateNote}>
+                    create new note
+                </CreateButton>
+                :
+                <h1>please authorize</h1>
             }
             {isLoading ? <h1>loading...</h1> :
                 <div>

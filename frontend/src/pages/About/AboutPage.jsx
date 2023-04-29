@@ -12,8 +12,7 @@ export const AboutPage = () => {
             <h3>List of techonologies that were used:</h3>
             <ul className='tech_list' >
                 <ListElement>React</ListElement>
-                <ListElement>Django REST Framework</ListElement>
-                <ListElement>React</ListElement>
+                <ListElement link={'http://localhost:8000/api/get_notes'} >Django REST Framework</ListElement>
                 <ListElement link={'http://localhost:8000/api/swagger'} target='_blank'>Endpoints link</ListElement>
             </ul>
         </div>

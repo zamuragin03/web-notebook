@@ -1,173 +1,106 @@
-from django.shortcuts import render
-from django.http import *
 from rest_framework import generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from .models import *
 from .serializers import *
-from drf_yasg.utils import swagger_auto_schema
+from rest_framework.response import *
+from rest_framework.permissions import *
+from .permissions import *
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-# Create your views here.
 
-
-class GetNotes(APIView):
+class NoteModel:
     serializer_class = NoteSerializer
     queryset = Note.objects.all()
 
-    def get(self, request, *args, **kwargs):
-        notes = Note.objects.all().order_by("-updated_at")
-        return Response(NoteSerializer(notes, many=True).data)
 
-
-class GetNote(APIView):
-    serializer_class = NoteSerializer
-    queryset = Note.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        try:
-            note = Note.objects.get(pk=pk)
-        except:
-            return Response({"error": "instance not found"})
-        return Response(NoteSerializer(note).data)
-
-
-class DeleteNote(APIView):
-    serializer_class = NoteSerializer
-    queryset = Note.objects.all()
-
-    def delete(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response()
-        try:
-            instance = Note.objects.get(pk=pk)
-        except:
-            return Response({"error": "instance not found"})
-        instance.delete()
-        return Response()
-
-
-class UpdateNote(APIView):
-    serializer_class = NoteSerializer
-    queryset = Note.objects.all()
-
-    @swagger_auto_schema(request_body=NoteSerializer)
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response()
-        try:
-            instance = Note.objects.get(pk=pk)
-        except:
-            return Response()
-        # print(request.data)
-        serializer = NoteSerializer(data=request.data, instance=instance)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
-class CreateNoteView(APIView):
-    serializer_class = NoteSerializer
-
-    @swagger_auto_schema(request_body=NoteSerializer)
-    def post(self, request, format=None):
-        serializer = NoteSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
-class GetBirthdays(APIView):
+class BirthdayModel:
     serializer_class = BirthdaySerializer
     queryset = Birthday.objects.all()
 
-    def get(self, request, *args, **kwargs):
-        notes = Birthday.objects.all().order_by("-birthday")
-        return Response(BirthdaySerializer(notes, many=True).data)
 
-
-class GetBirthday(APIView):
-    serializer_class = BirthdaySerializer
-    queryset = Birthday.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        try:
-            note = Birthday.objects.get(pk=pk)
-        except:
-            return Response({"error": "instance not found"})
-        return Response(BirthdaySerializer(note).data)
-
-
-class DeleteBirthday(APIView):
-    serializer_class = BirthdaySerializer
-    queryset = Birthday.objects.all()
-
-    def delete(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response()
-        try:
-            instance = Birthday.objects.get(pk=pk)
-        except:
-            return Response({"error": "instance not found"})
-        instance.delete()
-        return Response()
-
-
-class UpdateBirthday(APIView):
-    serializer_class = BirthdaySerializer
-    queryset = Birthday.objects.all()
-
-    @swagger_auto_schema(request_body=BirthdaySerializer)
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response()
-        try:
-            instance = Birthday.objects.get(pk=pk)
-        except:
-            return Response()
-        serializer = BirthdaySerializer(data=request.data, instance=instance)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
-class CreateBirthday(APIView):
-    serializer_class = BirthdaySerializer
-
-    @swagger_auto_schema(request_body=BirthdaySerializer)
-    def post(
-        self,
-        request,
-    ):
-        serializer = BirthdaySerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
-class GetCats(APIView):
+class CatModel:
     serializer_class = CatSerializer
     queryset = Category.objects.all()
 
-    def get(self, request, *args, **kwargs):
-        cats = Category.objects.all()
-        return Response(CatSerializer(cats, many=True).data)
 
-
-class GetCat(APIView):
-    serializer_class = CatSerializer
-    queryset = Category.objects.all()
+class GetNotes(NoteModel, generics.ListAPIView):
+    permission_classes = (IsOwner,)
 
     def get(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        try:
-            cat = Category.objects.get(pk=pk)
-        except:
-            return Response({"error": "instance not found"})
-        return Response(CatSerializer(cat).data)
+        if  not request.user.is_staff:
+            notes = Note.objects.filter(user_id=request.user.id)
+        else:
+            notes =Note.objects.all()
+        ser = NoteSerializer(data=notes, many=True)
+        ser.is_valid()
+        return Response(ser.data)
 
+
+class GetNote(NoteModel, generics.RetrieveAPIView):
+    permission_classes = (IsOwner,)
+
+
+class DeleteNote(NoteModel, generics.RetrieveDestroyAPIView):
+    permission_classes = (IsOwner,)
+
+
+class UpdateNote(NoteModel, generics.RetrieveUpdateAPIView):
+    permission_classes = (IsOwner,)
+
+
+class CreateNoteView(NoteModel, generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    
+
+
+class GetBirthdays(BirthdayModel, generics.ListAPIView):
+    ...
+
+
+class GetBirthday(BirthdayModel, generics.RetrieveAPIView):
+    ...
+
+
+class DeleteBirthday(BirthdayModel, generics.DestroyAPIView):
+    ...
+
+
+class UpdateBirthday(BirthdayModel, generics.RetrieveUpdateAPIView):
+    ...
+
+
+class CreateBirthday(BirthdayModel, generics.ListCreateAPIView):
+    ...
+
+
+class GetCats(CatModel, generics.ListAPIView):
+    ...
+
+
+class GetCat(CatModel, generics.RetrieveAPIView):
+    ...
+
+
+class CreateCat(CatModel, generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+
+
+class DeleteCat(CatModel, generics.RetrieveDestroyAPIView):
+    permission_classes = (IsOwner,)
+
+
+
+class RegisterApi(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["username"] = user.username
+        return token
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

@@ -9,12 +9,12 @@ export const BirthdayList = () => {
     const [birthdays, setBirthdays] = useState([
     ]);
     const navigate = useNavigate();
-    const [fetchNotes, isLoading, error] = useFetching(async () =>{
+    const [fetchBirthdays, isLoading, error] = useFetching(async () =>{
         let birthdays = await BirthdayService.get_all_birthdays()
         setBirthdays(birthdays)
     })
     useEffect(() => {
-        fetchNotes()
+        fetchBirthdays()
     }, []);
 
     let create_birthday = () => {

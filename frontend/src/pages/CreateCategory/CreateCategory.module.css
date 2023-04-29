@@ -1,0 +1,41 @@
+.myColorPicker{
+    background: transparent;
+    margin: 50px auto;
+    display: block;
+  border: none;
+  width: 100px;
+  height: 100px;
+  cursor: inherit;
+}
+.myColorPicker:hover{
+    cursor: pointer;
+}
+
+.myColorPicker::-webkit-color-swatch {
+    border-radius: 50%;
+    border: 7px solid white;
+}
+.cat_input{
+    display: block;
+    margin: 0 auto !important;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 17px;
+    color: white;
+    background-color: black;
+    border: none;
+    border-bottom: 2px solid white;
+    width: 200px;
+    height: 50px;
+    text-align: center !important;
+    text-indent: 0 !important;
+}
+
+.error_field{
+    text-align: center;
+    color: rgb(255, 255, 255);
+    text-decoration:underline red;
+    min-height: 80px;
+
+}
