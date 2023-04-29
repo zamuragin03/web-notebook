@@ -45,7 +45,7 @@ const CatSelector = ({ note, value, defaultValue, ...props }) => {
 
     let update_cat = async () => {
         if (note == null) return
-        console.log(selectedCat.id.toString()+' ' +selectedCat.name);
+        // console.log(selectedCat?.id.toString()+' ' +selectedCat.name);
         await fetch(`/api/update_note/${note.id}`, {
             method: 'PATCH',
             headers: {

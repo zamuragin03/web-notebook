@@ -7,11 +7,13 @@ import AuthContext from '../../components/Context/AuthContext';
 import GetAllNotes from '../../API/notes/NoteService';
 
 export const NotesList = () => {
-    const { user, authTokens } = useContext(AuthContext)
+    const { user, authTokens, updateToken } = useContext(AuthContext)
 
     const [notes, setNotes] = useState([])
     useEffect(() => {
         fetchNotes()
+        updateToken()
+
     }, [user]);
     const navigate = useNavigate();
     const [fetchNotes, isLoading, error] = useFetching(async () => {

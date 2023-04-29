@@ -15,7 +15,7 @@ export const AddBirthday = () => {
             },
             body: JSON.stringify(birthday)
         })
-        if (response.status === 200) {
+        if (response.status === 201) {
             navigate('/birthdays')
         }
 

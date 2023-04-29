@@ -7,13 +7,14 @@ import AuthContext from '../../components/Context/AuthContext';
 
 export const NotePage = () => {
     const { user, authTokens } = useContext(AuthContext)
-    const [hasError, sethasError] = useState(false);
     let { id } = useParams();
-    const [note, setNote] = useState(null);
-    const navigate = useNavigate();
+    const [note, setNote] = useState();
+    const [isOwner, setisOwner] = useState(()=>false);
     useEffect(() => {
         get_note()
-    }, [id])
+        console.log(isOwner);
+        console.log(user);
+    }, [user, isOwner])
 
     useEffect(() => {
         update_note()
@@ -26,13 +27,16 @@ export const NotePage = () => {
                     'Authorization': `Bearer ${authTokens.access}`
                 }
             })
-        if (response.status > 400) {
-            sethasError(true)
-        }
         if (response.status === 200) {
+            setisOwner( true)
             setNote(await response.json())
-            return
+            
         }
+        else{
+            setisOwner( false)
+
+        }
+
     }
     let update_note = async () => {
         if (note != null) {
@@ -63,7 +67,8 @@ export const NotePage = () => {
 
     return (
         <div>
-            {!hasError ?
+
+            {user && isOwner ?
                 <div>
                     <Link className='backarrow' to={'/notes'}>
                         <h1 >←</h1>

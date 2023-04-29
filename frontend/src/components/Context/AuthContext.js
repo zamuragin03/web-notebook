@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }) => {
     }, [authTokens]);
 
     let loginUser = async (username, password) => {
-        console.log(userId);
         let response = await fetch(`/api/token/`, {
             method: 'POST',
             headers: {
@@ -29,7 +28,6 @@ export const AuthProvider = ({ children }) => {
             body: JSON.stringify({ 'username': username, 'password': password })
         })
         let data = await response.json()
-        console.log(data);
         if (response.status === 200) {
             setauthTokens(data)
             setUser(jwt_decode(data.access).username)
@@ -49,7 +47,7 @@ export const AuthProvider = ({ children }) => {
 
     }
     let updateToken = async () => {
-        console.log('me executed');
+        console.log('token updated');
         let response = await fetch(`/api/token/refresh/`, {
             method: 'POST',
             headers: {
@@ -86,7 +84,8 @@ export const AuthProvider = ({ children }) => {
         logoutUser: logoutUser,
         authTokens: authTokens,
         registerUser:registerUser,
-        userId:userId
+        userId:userId,
+        updateToken: updateToken
     }
 
     return (
