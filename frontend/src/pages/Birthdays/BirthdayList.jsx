@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { BirthdayItem } from './BirthdayItem';
 import CreateButton from '../../UI/CreateButton/CreateButton';
-import BirthdayService from '../../API/birthdays/BirthdayService';
+import  { getAllBirthdays } from '../../API/birthdays/BirthdayService';
 import { useFetching } from '../../components/hooks/useFetchingNotes';
 
 export const BirthdayList = () => {
@@ -10,7 +10,7 @@ export const BirthdayList = () => {
     ]);
     const navigate = useNavigate();
     const [fetchBirthdays, isLoading, error] = useFetching(async () =>{
-        let birthdays = await BirthdayService.get_all_birthdays()
+        let birthdays = await getAllBirthdays()
         setBirthdays(birthdays)
     })
     useEffect(() => {

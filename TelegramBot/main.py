@@ -19,6 +19,15 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 
+@dp.message_handler(commands=["test"], state="*")
+async def help(message: types.Message, state:FSMContext):
+    async with state.proxy() as data:
+
+        await bot.send_message(
+        message.from_user.id, text=data, reply_markup=keyboards.help_kb
+    )
+    await states.FSMUser.choose_action.set()
+
 @dp.message_handler(commands=["start"], state="*")
 async def help(message: types.Message):
     await bot.send_message(
@@ -38,6 +47,8 @@ async def logout(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["access"] = None
         data["refresh"] = None
+        data["username"] = None
+        data["password"] = None
     await bot.send_message(message.from_user.id, text="Вы вышли")
     await states.FSMUser.typing_username.set()
 
@@ -48,7 +59,7 @@ async def typing_username(message: types.Message, state: FSMContext):
         data["username"] = message.text
         await bot.send_message(
             message.from_user.id,
-            text=text("Введите пароль", spoiler(message.text)),
+            text=text("Введите пароль"),
             parse_mode=ParseMode.MARKDOWN_V2,
         )
     await bot.delete_message(message.chat.id, message.message_id)
@@ -69,7 +80,7 @@ async def typing_password(message: types.Message, state: FSMContext):
         data["refresh"] = result["refresh"]
         await bot.send_message(
             message.from_user.id,
-            text=text(result["msg"], spoiler(message.text)),
+            text=text(result["msg"]),
             reply_markup=keyboards.help_kb,
             parse_mode=ParseMode.MARKDOWN_V2,
         )
@@ -257,6 +268,7 @@ async def register(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=states.FSMUser.typing_reg_username)
 async def typing_username_(message: types.Message, state: FSMContext):
+    await bot.delete_message(message.chat.id, message.message_id)
     async with state.proxy() as data:
         data["username"] = message.text
         await bot.send_message(
@@ -269,6 +281,7 @@ async def typing_username_(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=states.FSMUser.typing_reg_password)
 async def typing_password_(message: types.Message, state: FSMContext):
+    await bot.delete_message(message.chat.id, message.message_id)
     async with state.proxy() as data:
         data["password"] = message.text
         isRegistered = NoteService.registerUser(password=data["password"], username=data["username"])

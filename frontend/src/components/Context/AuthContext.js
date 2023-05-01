@@ -8,7 +8,10 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')).username : null)
     const [authTokens, setauthTokens] = useState(() => localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null)
-    const [userId, setuserId] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')).user_id : null);
+    const [userId, setuserId] = useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')).user_id : null)
+    const [isAuthorized, setisAuthorized] = useState(localStorage.getItem('authorized') ? JSON.parse(localStorage.getItem('authorized')).authorized : false)
+    const [error, setError] = useState('');
+
     useEffect(() => {
         let interval = setInterval(() => {
             if (authTokens) {
@@ -33,10 +36,19 @@ export const AuthProvider = ({ children }) => {
             setUser(jwt_decode(data.access).username)
             setuserId(jwt_decode(data.access).user_id)
             localStorage.setItem('authTokens', JSON.stringify(data))
+            localStorage.setItem('authorized', JSON.stringify({ 'authorized': true }))
+            setisAuthorized(1===1)
 
         }
         else {
-            alert('bad data')
+            setisAuthorized(false)
+        }
+        if (response.status===400){
+            setError('Поля не должны быть пустые')
+            
+        }
+        if (response.status===401){
+            setError('Неправильный логин или пароль')
         }
     }
     let logoutUser = () => {
@@ -44,10 +56,13 @@ export const AuthProvider = ({ children }) => {
         setUser(null)
         setuserId(null)
         localStorage.removeItem('authTokens')
+        localStorage.removeItem('authorized')
+        setisAuthorized(false)
+        setError(null)
 
     }
     let updateToken = async () => {
-        console.log('token updated');
+        if(!isAuthorized) return
         let response = await fetch(`/api/token/refresh/`, {
             method: 'POST',
             headers: {
@@ -66,8 +81,6 @@ export const AuthProvider = ({ children }) => {
         }
     }
     let registerUser = async (username, password) => {
-        // console.log(username);
-        // console.log(password);
         let response = await fetch(`api/drf-auth/register`, {
             method: 'POST',
             headers: {
@@ -85,7 +98,9 @@ export const AuthProvider = ({ children }) => {
         authTokens: authTokens,
         registerUser:registerUser,
         userId:userId,
-        updateToken: updateToken
+        updateToken: updateToken,
+        isAuthorized:isAuthorized,
+        error:error,
     }
 
     return (

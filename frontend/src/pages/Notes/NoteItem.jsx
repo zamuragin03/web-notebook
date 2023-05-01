@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, } from 'react-router-dom'
+import { getCat } from '../../API/Cats/CatsService'
 
 const NoteItem = ({ note }) => {
   let date = new Date(note.updated_at)
@@ -12,9 +13,10 @@ const NoteItem = ({ note }) => {
   const [color, setcolor] = useState();
   useEffect(() => {
     get_note_cat()
+    
   }, []);
   const get_note_cat = async () => {
-    let response = await fetch(`/api/get_cat/${note.category}`)
+    let response = await getCat(note.category)
         if (response.status === 200) {
             let data = await response.json()
             setcolor(data.color)

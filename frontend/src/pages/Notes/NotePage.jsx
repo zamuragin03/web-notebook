@@ -4,16 +4,15 @@ import ColorPicker from '../CreateCategory/CreateCategory';
 
 import CatSelector from '../../UI/Selector/CatSelector';
 import AuthContext from '../../components/Context/AuthContext';
+import { deleteNote, getNote, updateNote } from '../../API/notes/NoteService';
 
 export const NotePage = () => {
     const { user, authTokens } = useContext(AuthContext)
     let { id } = useParams();
     const [note, setNote] = useState();
-    const [isOwner, setisOwner] = useState(()=>false);
+    const [isOwner, setisOwner] = useState(() => false);
     useEffect(() => {
         get_note()
-        console.log(isOwner);
-        console.log(user);
     }, [user, isOwner])
 
     useEffect(() => {
@@ -21,33 +20,19 @@ export const NotePage = () => {
     }, [note]);
 
     let get_note = async () => {
-        let response = await fetch(`/api/get_note/${id}`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${authTokens.access}`
-                }
-            })
+        let response = await getNote(authTokens.access, id)
         if (response.status === 200) {
-            setisOwner( true)
+            setisOwner(true)
             setNote(await response.json())
-            
         }
-        else{
-            setisOwner( false)
-
+        else {
+            setisOwner(false)
         }
 
     }
     let update_note = async () => {
         if (note != null) {
-            fetch(`/api/update_note/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authTokens.access}`
-                },
-                body: JSON.stringify({ 'body': note.body })
-            })
+            await updateNote(authTokens.access, id, note.body)
         }
     }
     function ChangeNote(event) {
@@ -55,13 +40,7 @@ export const NotePage = () => {
         update_note()
     }
     async function delete_note() {
-        fetch(`/api/delete_note/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authTokens.access}`
-            }
-        })
+        await deleteNote(authTokens.access, id)
     }
 
 

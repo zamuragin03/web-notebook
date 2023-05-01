@@ -7,6 +7,7 @@ import ColorPicker from '../../UI/ColorPicker/ColorPicker';
 import InputField from '../../UI/InputField/InputField';
 import validateCat from './ValidateCategory'
 import AuthContext from '../../components/Context/AuthContext';
+import { createCat } from '../../API/Cats/CatsService';
 
 const CreateCategory = ({ children, onChange, ...props }) => {
     let { user, authTokens, userId } = useContext(AuthContext)
@@ -19,19 +20,9 @@ const CreateCategory = ({ children, onChange, ...props }) => {
         let isValid = validateCat(category)
         if (isValid) {
             setError(isValid)
-            console.log('s');
             return
         }
-        console.log(category)
-        let response = await fetch(`/api/create_cat`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authTokens.access}`
-
-            },
-            body: JSON.stringify(category)
-        })
+        let response = await createCat(authTokens.access, category)
         if (response.status === 201) {
             navigate('/notes')
         }

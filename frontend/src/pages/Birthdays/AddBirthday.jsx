@@ -1,6 +1,7 @@
 import React, { useEffect, useState, } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import CreateButton from '../../UI/CreateButton/CreateButton';
+import { createBirthday } from '../../API/birthdays/BirthdayService';
 
 
 
@@ -8,17 +9,10 @@ export const AddBirthday = () => {
     const [birthday, setBirthday] = useState({ birthday: '', description: '' });
     const navigate = useNavigate();
     async function Add_Birthday() {
-        let response = await fetch(`/api/create_birthday/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(birthday)
-        })
+        let response= await createBirthday(birthday)
         if (response.status === 201) {
             navigate('/birthdays')
         }
-
         document.getElementsByName('birthday_body')[0].placeholder = "shouldn't be empty";
 
     }

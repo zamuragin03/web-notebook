@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import MyButton from '../../UI/CreateButton/CreateButton';
 import DeleteButton from '../../UI/DeleteButton/DeletteButton';
+import { deleteBirthday, getBirthdyay, updateBirthday } from '../../API/birthdays/BirthdayService';
 export const BirthdayPage = () => {
     let { id } = useParams();
     const [description, setDescription] = useState(null);
@@ -19,7 +20,7 @@ export const BirthdayPage = () => {
 
     }, [description, birthday]);
     let get_item = async () => {
-        let response = await fetch(`/api/get_birthday/${id}`)
+        let response = await getBirthdyay(id)
         if (response.status === 200) {
             let item = await response.json()
             setDescription(item['description'])
@@ -36,23 +37,11 @@ export const BirthdayPage = () => {
         setBirthday(event.target.value)
     }
     let update_item = async () => {
-        await fetch(`/api/update_birthday/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 'birthday': birthday, 'description': description })
-        })
+        await updateBirthday(id, birthday, description)
     }
     let delete_item = async () => {
-        await fetch(`/api/delete_birthday/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
+        await deleteBirthday()
         navigate('/birthdays')
-
     }
 
     return (

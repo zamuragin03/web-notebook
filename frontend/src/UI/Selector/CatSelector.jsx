@@ -1,22 +1,23 @@
 
 import React, { useEffect, useState, useContext } from 'react'
 import { useFetching } from '../../components/hooks/useFetchingNotes';
-import CatsService from '../../API/Cats/CatsService';
+
 import AuthContext from '../../components/Context/AuthContext';
+import { getCat, get_all_cats } from '../../API/Cats/CatsService';
+import { updateNote } from '../../API/notes/NoteService';
 
 const CatSelector = ({ note, value, defaultValue, ...props }) => {
-    // const [myNote, setmyNote] = useState(initialState);
     const { user, authTokens } = useContext(AuthContext)
 
     const [selectedCat, setselectedCat] = useState('');
     const [cats, setCats] = useState([]);
     const [fetchCats, isLoading, error] = useFetching(async () => {
-        let fetched_cats = await CatsService.get_all_cats();
+        let fetched_cats = await get_all_cats()
         setCats(fetched_cats)
     })
     const fetch_cat = async () => {
         if (note == null) return
-        let response = await fetch(`/api/get_cat/${note?.category}`)
+        let response = await getCat(note.category)
         if (response.status === 200) {
             let data = await response.json()
             setselectedCat(data)
@@ -45,16 +46,7 @@ const CatSelector = ({ note, value, defaultValue, ...props }) => {
 
     let update_cat = async () => {
         if (note == null) return
-        // console.log(selectedCat?.id.toString()+' ' +selectedCat.name);
-        await fetch(`/api/update_note/${note.id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authTokens.access}`
-                
-            },
-            body: JSON.stringify({ 'category': selectedCat.id })
-        })
+        await updateNote(authTokens.access, note.id, selectedCat.id)
     }
     return (
         <select {...props} defaultValue={selectedCat.name} value={selectedCat.name} onChange={(e) => ChangeCat(e.target.value)}>

@@ -7,16 +7,16 @@ import AuthContext from '../../components/Context/AuthContext'
 
 
 const Login = ({ children, visible, setvisible }) => {
-    let { loginUser, registerUser } = useContext(AuthContext)
+    let { loginUser, registerUser, error, isAuthorized } = useContext(AuthContext)
     const rootClasses = [classes.Login]
-
+    useEffect(() => {
+    }, [isAuthorized]);
     if (visible) {
         rootClasses.push(classes.active)
     }
     const [loginClasses, setloginClasses] = useState();
     const [registerClasses, setRegisterClasses] = useState(classes.deactivate);
-    const [Form, setForm] = useState(null);
-    const [error, seterror] = useState();
+    const [Form, setForm] = useState({'username':'', 'password':''});
 
     let ChangeTypeLogin = () => {
         setRegisterClasses(classes.deactivate)
@@ -36,7 +36,10 @@ const Login = ({ children, visible, setvisible }) => {
     }
     let login = async () => {
         loginUser(Form.username, Form.password)
-        setvisible(false)
+        if (isAuthorized){
+            setvisible(false)
+        }
+        
     }
     let register = async () => {
         registerUser(Form.username, Form.password)
@@ -46,7 +49,6 @@ const Login = ({ children, visible, setvisible }) => {
 
 
     return (
-        // <div className={rootClasses.join(' ')} onClick={changeVisible(false)} >
         <div className={rootClasses.join(' ')} onClick={() => setvisible(false)}  >
             <div className={classes.LoginContent} onClick={(e) => e.stopPropagation()} >
                 {children}

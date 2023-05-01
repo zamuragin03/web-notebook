@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import CreateButton from '../../UI/CreateButton/CreateButton';
 import { useFetching } from '../../components/hooks/useFetchingNotes';
-import CatsService from '../../API/Cats/CatsService';
+import  { get_all_cats } from '../../API/Cats/CatsService';
 import AuthContext from '../../components/Context/AuthContext';
+import { createNote } from '../../API/notes/NoteService';
 
 
 export const AddPage = () => {
@@ -19,32 +20,18 @@ export const AddPage = () => {
         fetchCats()
     }, []);
     const [fetchCats,] = useFetching(async () => {
-        let cats = await CatsService.get_all_cats()
+        let cats = await get_all_cats()
         setcats(cats)
     })
     async function Add_Note() {
-        console.log(userId);
-        let el = cats.find(e => e.name == selectedCat)
-        let cat_id = el.id
-        
+        let cat_id = cats.find(e => e.name == selectedCat).id
         if (note.body == '') {
             return
         }
         if (selectedCat == null) {
             return
         }
-        let response = await fetch(`/api/create_note/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authTokens.access}`
-            },
-            body: JSON.stringify({
-                'body': note.body,
-                'category': cat_id,
-                'user': userId,
-            })
-        })
+        let response = await createNote(authTokens.access, note.body, cat_id, userId)
         if (response.status === 201) {
             navigate('/notes')
         }
