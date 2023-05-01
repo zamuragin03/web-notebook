@@ -10,7 +10,7 @@ const Login = ({ children, visible, setvisible }) => {
     let { loginUser, registerUser, error, isAuthorized } = useContext(AuthContext)
     const rootClasses = [classes.Login]
     useEffect(() => {
-    }, [isAuthorized]);
+    }, [isAuthorized, error]);
     if (visible) {
         rootClasses.push(classes.active)
     }
@@ -43,7 +43,9 @@ const Login = ({ children, visible, setvisible }) => {
     }
     let register = async () => {
         registerUser(Form.username, Form.password)
-        setvisible(false)
+        if (error =='OK'){
+            setvisible(false)
+        }
 
     }
 

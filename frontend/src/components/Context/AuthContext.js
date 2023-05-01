@@ -88,6 +88,16 @@ export const AuthProvider = ({ children }) => {
             },
             body: JSON.stringify({ 'username': username, 'password': password })
         })
+        if (response.status===201){
+            setError('OK')
+            return
+        }
+        if (response.status===400){
+            setError('Такой пользователь уже существует')
+        }
+        if (!username || !password){
+            setError('Поля не должны быть пустые')
+        }
     }
 
 
