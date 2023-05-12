@@ -40,7 +40,7 @@ export const BirthdayPage = () => {
         await updateBirthday(id, birthday, description)
     }
     let delete_item = async () => {
-        await deleteBirthday()
+        await deleteBirthday(id)
         navigate('/birthdays')
     }
 

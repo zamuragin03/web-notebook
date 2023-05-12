@@ -45,10 +45,10 @@ async def auth(message: types.Message, state: FSMContext):
 @dp.message_handler(commands=["logout"], state="*")
 async def logout(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        data["access"] = None
-        data["refresh"] = None
-        data["username"] = None
-        data["password"] = None
+        del data["access"] 
+        del data["refresh"]
+        del data["username"]
+        del data["password"]
     await bot.send_message(message.from_user.id, text="Вы вышли")
     await states.FSMUser.typing_username.set()
 

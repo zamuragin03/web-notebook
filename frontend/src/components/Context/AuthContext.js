@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, } from "react";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
 const AuthContext = createContext()
 export default AuthContext
 
@@ -17,7 +16,7 @@ export const AuthProvider = ({ children }) => {
             if (authTokens) {
                 updateToken()
             }
-        }, 270000);
+        }, 240000);
         return () => clearInterval(interval)
 
     }, [authTokens]);
@@ -37,11 +36,11 @@ export const AuthProvider = ({ children }) => {
             setuserId(jwt_decode(data.access).user_id)
             localStorage.setItem('authTokens', JSON.stringify(data))
             localStorage.setItem('authorized', JSON.stringify({ 'authorized': true }))
-            setisAuthorized(1===1)
+            setisAuthorized(()=>true)
 
         }
         else {
-            setisAuthorized(false)
+            setisAuthorized(()=>false)
         }
         if (response.status===400){
             setError('Поля не должны быть пустые')
@@ -57,7 +56,7 @@ export const AuthProvider = ({ children }) => {
         setuserId(null)
         localStorage.removeItem('authTokens')
         localStorage.removeItem('authorized')
-        setisAuthorized(false)
+        setisAuthorized(()=>false)
         setError(null)
 
     }

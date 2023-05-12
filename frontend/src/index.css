@@ -4,6 +4,7 @@
     padding: 0;
     text-decoration: none;
     /* filter: invert(1); */
+    user-select: none;
 }
 
 body{

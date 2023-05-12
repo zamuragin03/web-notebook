@@ -7,5 +7,6 @@ class CategoryDTO:
         self.name = name
         self.color = color
 
-    def __str__(self) -> str:
-        return json.dumps({"id": self.id, 'name': self.name, "color": self.color}, ensure_ascii=False)
+
+    def __repr__(self) -> str:
+        return json.dumps(self.__dict__ , ensure_ascii=False)

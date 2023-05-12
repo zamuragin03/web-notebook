@@ -5,7 +5,7 @@ import CreateButton from '../../UI/CreateButton/CreateButton';
 import  { getAllBirthdays } from '../../API/birthdays/BirthdayService';
 import { useFetching } from '../../components/hooks/useFetchingNotes';
 
-export const BirthdayList = () => {
+export const    BirthdayList = () => {
     const [birthdays, setBirthdays] = useState([
     ]);
     const navigate = useNavigate();

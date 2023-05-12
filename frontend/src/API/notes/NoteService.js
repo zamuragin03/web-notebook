@@ -36,13 +36,12 @@ export const getNote = async (access, id) => {
 
 
 export const updateNote = async (access, id, data) => {
-    let body = 0
+    let body = {}
     if (Number.isInteger(data)) {
-        body = { 'category': data }
+        body['category'] = data
     }
     else {
-        body = { 'body': data }
-
+        body['body']=data
     }
     await fetch(`/api/update_note/${id}`, {
         method: 'PATCH',

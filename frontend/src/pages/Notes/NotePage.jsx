@@ -9,7 +9,7 @@ import { deleteNote, getNote, updateNote } from '../../API/notes/NoteService';
 export const NotePage = () => {
     const { user, authTokens } = useContext(AuthContext)
     let { id } = useParams();
-    const [note, setNote] = useState();
+    const [note, setNote] = useState(null);
     const [isOwner, setisOwner] = useState(() => false);
     useEffect(() => {
         get_note()
@@ -46,7 +46,6 @@ export const NotePage = () => {
 
     return (
         <div>
-
             {user && isOwner ?
                 <div>
                     <Link className='backarrow' to={'/notes'}>
@@ -57,7 +56,7 @@ export const NotePage = () => {
                     </Link>
                     <textarea className='change_text_area' defaultValue={note?.body} onChange={(event) => ChangeNote(event)}></textarea>
                     <hr />
-                    <CatSelector note={note} className='color_picker' />
+                    <CatSelector note_id ={id} note={note} className='color_picker' />
                 </div>
                 :
                 <h2 className='error_field' >sorry you don't have acces</h2>

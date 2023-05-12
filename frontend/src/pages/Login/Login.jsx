@@ -8,15 +8,18 @@ import AuthContext from '../../components/Context/AuthContext'
 
 const Login = ({ children, visible, setvisible }) => {
     let { loginUser, registerUser, error, isAuthorized } = useContext(AuthContext)
-    const rootClasses = [classes.Login]
     useEffect(() => {
-    }, [isAuthorized, error]);
+        if (isAuthorized) {
+            setvisible(false)
+        }
+    }, [isAuthorized]);
+    const rootClasses = [classes.Login]
     if (visible) {
         rootClasses.push(classes.active)
     }
     const [loginClasses, setloginClasses] = useState();
     const [registerClasses, setRegisterClasses] = useState(classes.deactivate);
-    const [Form, setForm] = useState({'username':'', 'password':''});
+    const [Form, setForm] = useState({ 'username': '', 'password': '' });
 
     let ChangeTypeLogin = () => {
         setRegisterClasses(classes.deactivate)
@@ -34,19 +37,15 @@ const Login = ({ children, visible, setvisible }) => {
         ChangeTypeLogin()
 
     }
+
     let login = async () => {
         loginUser(Form.username, Form.password)
-        if (isAuthorized){
-            setvisible(false)
-        }
-        
     }
     let register = async () => {
         registerUser(Form.username, Form.password)
-        if (error =='OK'){
+        if (error == 'OK') {
             setvisible(false)
         }
-
     }
 
 
@@ -60,10 +59,8 @@ const Login = ({ children, visible, setvisible }) => {
                         <InputField type='text' placeholder='Login' onChange={e => setForm({ ...Form, 'username': e.target.value })} ></InputField>
                         <InputField type='password' placeholder='Password' onChange={e => setForm({ ...Form, 'password': e.target.value })} ></InputField>
                     </div>
-
                     <CreateButton onClick={login} clss={loginClasses}  >Login</CreateButton>
                     <CreateButton onClick={register} clss={registerClasses} >Register</CreateButton>
-
                 </div>
                 <DeleteButton clss={classes.switcher} onClick={Change_Login_Register} >switch </DeleteButton>
             </div>

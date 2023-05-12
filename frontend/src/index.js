@@ -7,10 +7,10 @@ import Header from './components/Header';
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from "./components/Context/AuthContext";;
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <div className="wrapper">
+
     <AuthProvider>
       <BrowserRouter>
         <Header />

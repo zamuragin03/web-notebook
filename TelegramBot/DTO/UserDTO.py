@@ -7,4 +7,4 @@ class UserDTO:
         self.password = password 
 
     def __str__(self) -> str:
-        return json.dumps({'username' : self.username, 'password' : self.password}, ensure_ascii=False)
+        return json.dumps(self.__dict__, ensure_ascii=False)

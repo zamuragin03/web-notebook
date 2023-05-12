@@ -41,9 +41,7 @@ export const NotesList = () => {
                     {isLoading ? <h1>loading...</h1> :
                         <div>
                             {
-                                notes.map(note => (
-                                    <NoteItem className='NoteItem' key={note.id} note={note} />
-                                ))
+                                notes.map(note => (<NoteItem className='NoteItem' key={note.id} note={note} />))
                             }
                         </div>
                     }
@@ -51,7 +49,6 @@ export const NotesList = () => {
                 :
                 <h1>please authorize</h1>
             }
-
         </div>
     )
 }

@@ -4,11 +4,11 @@ import { useFetching } from '../../components/hooks/useFetchingNotes';
 
 import AuthContext from '../../components/Context/AuthContext';
 import { getCat, get_all_cats } from '../../API/Cats/CatsService';
-import { updateNote } from '../../API/notes/NoteService';
+import { getNote, updateNote } from '../../API/notes/NoteService';
 
-const CatSelector = ({ note, value, defaultValue, ...props }) => {
+const CatSelector = ({ note_id, value, defaultValue, ...props }) => {
     const { user, authTokens } = useContext(AuthContext)
-
+    const [note, setNote] = useState({});
     const [selectedCat, setselectedCat] = useState('');
     const [cats, setCats] = useState([]);
     const [fetchCats, isLoading, error] = useFetching(async () => {
@@ -16,8 +16,13 @@ const CatSelector = ({ note, value, defaultValue, ...props }) => {
         setCats(fetched_cats)
     })
     const fetch_cat = async () => {
-        if (note == null) return
-        let response = await getCat(note.category)
+        let response0 = await getNote(authTokens.access, note_id)
+        let _note={}
+        if (response0.status === 200) {
+            _note = await response0.json()
+            setNote(()=>_note)
+        }
+        let response = await getCat(_note.category)
         if (response.status === 200) {
             let data = await response.json()
             setselectedCat(data)
@@ -28,7 +33,7 @@ const CatSelector = ({ note, value, defaultValue, ...props }) => {
         if (note != null) {
             fetchCats()
         }
-    }, [note,])
+    }, [])
     useEffect(() => {
         update_cat()
 
@@ -46,7 +51,7 @@ const CatSelector = ({ note, value, defaultValue, ...props }) => {
 
     let update_cat = async () => {
         if (note == null) return
-        await updateNote(authTokens.access, note.id, selectedCat.id)
+        await updateNote(authTokens.access, note_id, selectedCat.id)
     }
     return (
         <select {...props} defaultValue={selectedCat.name} value={selectedCat.name} onChange={(e) => ChangeCat(e.target.value)}>
